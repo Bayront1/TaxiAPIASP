@@ -1,0 +1,26 @@
+﻿name: ASP.NET Syntax
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build and check syntax
+      run: |
+        dotnet build --no-restore
+        dotnet tool install -g StyleCop.Analyzers
+        dotnet build --no-restore /p:StyleCopEnabled=true
